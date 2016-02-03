@@ -1,0 +1,26 @@
+﻿@using SayIt.Models;
+@model IEnumerable<PublicMessage>
+
+@foreach (var item in Model)
+{
+    if (item.User_Id == ((User)Session["user"]).Id)
+    {
+        <li class="ChatLog__entry ChatLog__entry_mine">
+            <img class="ChatLog__avatar" src='~/Profile_Pictures/profile_@(((User)Session["User"]).Id).jpg' />
+            <p class="ChatLog__message">
+                @item.Message
+                <time class="ChatLog__timestamp">@item.Data_Time</time>
+            </p>
+        </li>
+    }
+    else
+    {
+        <li class="ChatLog__entry">
+            <img class="ChatLog__avatar" src='~/Profile_Pictures/profile_@(item.User_Id).jpg' />
+            <p class="ChatLog__message">
+                @item.Message
+                <time class="ChatLog__timestamp">@item.Data_Time</time>
+            </p>
+        </li>
+    }
+}

@@ -1,0 +1,124 @@
+﻿@using SayIt.Hubs;
+@using SayIt.Models;
+@model IEnumerable<Friend>
+
+@{
+    int usersCount = 0;
+}
+
+@if (Model.Count() > 0)
+{
+    foreach (var item in Model)
+    {
+        if (usersCount > 0)
+        {
+            <hr class="separator" />
+        }
+        int id;
+        DateTime timestamp;
+        string first_name;
+        string last_name;
+        string status;
+        if (item.User_Id == ((User)Session["User"]).Id)
+        {
+            id = item.Friend_Id;
+            timestamp = (DateTime)item.User.Seen;
+            first_name = item.User.First_Name;
+            last_name = item.User.Last_Name;
+            status = item.Status;
+        }
+        else
+        {
+            id = item.User_Id;
+            timestamp = (DateTime)item.User1.Seen;
+            first_name = item.User1.First_Name;
+            last_name = item.User1.Last_Name;
+            status = item.Status;
+        }
+        <div class="friendLink" id="user-@id" data-userID=@id>
+            <img class="profile_pic fl-image" src='~/Profile_Pictures/profile_@(id).jpg' />
+            <h4 class="searchh4">@(first_name + " " + last_name)</h4>
+            @{
+                if (ChatHub.connectedUsers.Count(x => Convert.ToInt32(x.UserId) == id) >= 1)
+                {
+                    <p class="searchp">Active now</p>
+                }
+                else
+                {
+                    TimeSpan temp = DateTime.Now - timestamp;
+                    if (temp.TotalSeconds < 60)
+                    {
+                        if (temp.Seconds <= 1)
+                        {
+                            <p class="searchp">Seen: A second ago</p>
+                        }
+                        else
+                        {
+                            <p class="searchp">Seen: @temp.Seconds seconds ago</p>
+                        }
+                    }
+                    else if (temp.TotalMinutes < 60)
+                    {
+                        if (temp.Minutes <= 1)
+                        {
+                            <p class="searchp">Seen: A minute ago</p>
+                        }
+                        else
+                        {
+                            <p class="searchp">Seen: @temp.Minutes minutes ago</p>
+                        }
+                    }
+                    else if (temp.TotalHours < 24)
+                    {
+                        if (temp.Hours <= 1)
+                        {
+                            <p class="searchp">Seen: An hour ago</p>
+                        }
+                        else
+                        {
+                            <p class="searchp">Seen: @temp.Hours hours ago</p>
+                        }
+                    }
+                    else if (temp.TotalDays < 30)
+                    {
+                        if (temp.Days <= 1)
+                        {
+                            <p class="searchp">Seen: A day ago</p>
+                        }
+                        else
+                        {
+                            <p class="searchp">Seen: @temp.Days days ago</p>
+                        }
+                    }
+                    else if (temp.TotalDays < 360)
+                    {
+                        if (Math.Floor(temp.TotalDays / 30) <= 1)
+                        {
+                            <p class="searchp">Seen: A month ago</p>
+                        }
+                        else
+                        {
+                            <p class="searchp">Seen: @Math.Floor(temp.TotalDays / 30) months ago</p>
+                        }
+                    }
+                    else
+                    {
+                        if (Math.Floor(temp.TotalDays / 360) <= 1)
+                        {
+                            <p class="searchp">Seen: A year ago</p>
+                        }
+                        else
+                        {
+                            <p class="searchp">Seen: @Math.Floor(temp.TotalDays / 360) years ago</p>
+                        }
+                    }
+                }
+            }
+        </div>
+                    usersCount++;
+                    }
+                }
+                else
+                {
+                    <h3 class="noMessage">Your search did not match any friend.</h3>
+                }

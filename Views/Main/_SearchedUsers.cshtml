@@ -1,0 +1,207 @@
+﻿@using SayIt.Hubs;
+@using SayIt.Models;
+@model IEnumerable<User>
+
+@if (Model.Count() > 0)
+{
+    foreach (var item in Model)
+    {
+        if (item.Id == ((User)Session["User"]).Id)
+        {
+            <div class="friendLink" id="user-@item.Id" data-userID=@item.Id>
+                <img class="profile_pic fl-image" src='~/Profile_Pictures/profile_@(((User)Session["User"]).Id).jpg' />
+                <h4 class="searchh4">@(item.First_Name + " " + item.Last_Name)</h4>
+                @{
+                    if (ChatHub.connectedUsers.Count(x => Convert.ToInt32(x.UserId) == item.Id) >= 1)
+                    {
+                        <p class="searchp">Active now</p>
+                    }
+                    else
+                    {
+                        TimeSpan temp = DateTime.Now - (DateTime)item.Seen;
+                        if (temp.TotalSeconds < 60)
+                        {
+                            if (temp.Seconds <= 1)
+                            {
+                                <p class="searchp">Seen: A second ago</p>
+                            }
+                            else
+                            {
+                                <p class="searchp">Seen: @temp.Seconds seconds ago</p>
+                            }
+                        }
+                        else if (temp.TotalMinutes < 60)
+                        {
+                            if (temp.Minutes <= 1)
+                            {
+                                <p class="searchp">Seen: A minute ago</p>
+                            }
+                            else
+                            {
+                                <p class="searchp">Seen: @temp.Minutes minutes ago</p>
+                            }
+                        }
+                        else if (temp.TotalHours < 24)
+                        {
+                            if (temp.Hours <= 1)
+                            {
+                                <p class="searchp">Seen: An hour ago</p>
+                            }
+                            else
+                            {
+                                <p class="searchp">Seen: @temp.Hours hours ago</p>
+                            }
+                        }
+                        else if (temp.TotalDays < 30)
+                        {
+                            if (temp.Days <= 1)
+                            {
+                                <p class="searchp">Seen: A day ago</p>
+                            }
+                            else
+                            {
+                                <p class="searchp">Seen: @temp.Days days ago</p>
+                            }
+                        }
+                        else if (temp.TotalDays < 360)
+                        {
+                            if (Math.Floor(temp.TotalDays / 30) <= 1)
+                            {
+                                <p class="searchp">Seen: A month ago</p>
+                            }
+                            else
+                            {
+                                <p class="searchp">Seen: @Math.Floor(temp.TotalDays / 30) months ago</p>
+                            }
+                        }
+                        else
+                        {
+                            if (Math.Floor(temp.TotalDays / 360) <= 1)
+                            {
+                                <p class="searchp">Seen: A year ago</p>
+                            }
+                            else
+                            {
+                                <p class="searchp">Seen: @Math.Floor(temp.TotalDays / 360) years ago</p>
+                            }
+                        }
+                    }
+                }
+            </div>
+                    }
+                    else
+                    {
+                        <div class="friendLink" id="user-@item.Id" data-userID=@item.Id>
+                            <img class="profile_pic fl-image" src='~/Profile_Pictures/profile_@(item.Id).jpg' />
+                            <h4 class="searchh4">@(item.First_Name + " " + item.Last_Name)</h4>
+                            @{
+                                if (ChatHub.connectedUsers.Count(x => Convert.ToInt32(x.UserId) == item.Id) == 1)
+                                {
+                                    <p class="searchp">Active now</p>
+                                }
+                                else
+                                {
+                                    TimeSpan temp = DateTime.Now - (DateTime)item.Seen;
+                                    if (temp.TotalSeconds < 60)
+                                    {
+                                        if (temp.Seconds <= 1)
+                                        {
+                                            <p class="searchp">Seen: A second ago</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="searchp">Seen: @temp.Seconds seconds ago</p>
+                                        }
+                                    }
+                                    else if (temp.TotalMinutes < 60)
+                                    {
+                                        if (temp.Minutes <= 1)
+                                        {
+                                            <p class="searchp">Seen: A minute ago</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="searchp">Seen: @temp.Minutes minutes ago</p>
+                                        }
+                                    }
+                                    else if (temp.TotalHours < 24)
+                                    {
+                                        if (temp.Hours <= 1)
+                                        {
+                                            <p class="searchp">Seen: An hour ago</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="searchp">Seen: @temp.Hours hours ago</p>
+                                        }
+                                    }
+                                    else if (temp.TotalDays < 30)
+                                    {
+                                        if (temp.Days <= 1)
+                                        {
+                                            <p class="searchp">Seen: A day ago</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="searchp">Seen: @temp.Days days ago</p>
+                                        }
+                                    }
+                                    else if (temp.TotalDays < 360)
+                                    {
+                                        if (Math.Floor(temp.TotalDays / 30) <= 1)
+                                        {
+                                            <p class="searchp">Seen: A month ago</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="searchp">Seen: @Math.Floor(temp.TotalDays / 30) months ago</p>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Math.Floor(temp.TotalDays / 360) <= 1)
+                                        {
+                                            <p class="searchp">Seen: A year ago</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="searchp">Seen: @Math.Floor(temp.TotalDays / 360) years ago</p>
+                                        }
+                                    }
+                                }
+                            }
+                            @{
+                                bool flag = true;
+                                foreach (Friend friend in ViewBag.FriendList)
+                                {
+                                    if ((item.Id == friend.User_Id || item.Id == friend.Friend_Id) && (friend.User_Id == ((User)Session["User"]).Id) && friend.Status == "Pending")
+                                    {
+                                        <input type="button" id="@item.Id" data-userID="@item.Id" data-operation="cancel" data-from="search" class="btn btn-default button myEvent" value="Cancel Request" />
+                                        flag = false;
+                                    }
+                                    else if ((item.Id == friend.User_Id || item.Id == friend.Friend_Id) && (friend.Friend_Id == ((User)Session["User"]).Id) && friend.Status == "Pending")
+                                    {
+                                        <input type="button" id='@(item.Id + "a")' data-userID="@item.Id" data-operation="accept" data-from="search" class="btn btn-default button friendEvent second" value="Accept Request" />
+                                            <input type="button" id='@(item.Id + "d")' data-userID="@item.Id" data-operation="delete" data-from="search" class="btn btn-default myEvent button" value="Delete Request" />
+                                        flag = false;
+                                    }
+                                    else if (((item.Id == friend.User_Id && friend.Friend_Id == ((User)Session["User"]).Id) || (friend.User_Id == ((User)Session["User"]).Id && friend.Friend_Id == item.Id)) && friend.Status == "Friends")
+                                    {
+                                        <input type="button" id='@(item.Id + "u")' data-operation="unfriend" data-from="search" class="btn btn-default button myEvent" value="Unfriend" />
+                                            <input type="button" id='@(item.Id + "f")' data-userID="@item.Id" data-operation="unfriend" data-from="search" class="btn btn-default button myEvent hideButton" value="Friends" />
+                                        flag = false;
+                                    }
+                                }
+                                if (flag)
+                                {
+                                    <input type="button" id="@item.Id" data-userID="@item.Id" data-operation="add" data-from="search" class="btn btn-default button friendEvent" value="Add Friend" />
+                                }
+                            }
+                        </div>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <h3 class="noMessage">Your search did not match any people.</h3>
+                                }

@@ -1,0 +1,63 @@
+﻿@using SayIt.Models;
+@model IEnumerable<SayIt.Models.File>
+
+@if (Model.Count() > 0)
+{
+    foreach (var item in Model)
+    {
+        if (item.Sender_Id == ((User)Session["user"]).Id)
+        {
+            if (item.File_Type == "image")
+            {
+                <div class="myFile__entry myFile__entry_mine myMargin">
+                    <img class="myFile__avatar" src='~/Profile_Pictures/profile_@(((User)Session["User"]).Id).jpg' />
+                    <p class="myFile__message">
+                        <a class="fancybox" rel="gallery" href="~/Private_Files/@(item.File_Name)">
+                            <img src="~/Private_Files/@(item.File_Name)" class="img-thumbnail profileImageHover" style="max-width: 200px; max-height: 200px;" />
+                        </a>
+                        <time class="myFile__timestamp">@item.Date_Time</time>
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="myFile__entry myFile__entry_mine myMargin">
+                    <img class="myFile__avatar" src='~/Profile_Pictures/profile_@(((User)Session["User"]).Id).jpg' />
+                    <p class="myFile__message">
+                        <a href="~/Private_Files/@(item.File_Name)" target="_blank" download="@(item.File_Name)"><span style="color: black;">@(item.File_Name)</span></a>
+                        <time class="myFile__timestamp">@item.Date_Time</time>
+                    </p>
+                </div>
+            }
+        }
+        else
+        {
+            if (item.File_Type == "image")
+            {
+                <div class="ChatLog__entry myMargin">
+                    <img class="ChatLog__avatar" src='~/Profile_Pictures/profile_@(item.Sender_Id).jpg' />
+                    <p class="ChatLog__message">
+                        <a class="fancybox" rel="gallery" href="~/Private_Files/@(item.File_Name)">
+                            <img src="~/Private_Files/@(item.File_Name)" class="img-thumbnail profileImageHover" style="max-width: 200px; max-height: 200px;" />
+                        </a>
+                        <time class="ChatLog__timestamp">@item.Date_Time</time>
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="ChatLog__entry myMargin">
+                    <img class="ChatLog__avatar" src='~/Profile_Pictures/profile_@(item.Sender_Id).jpg' />
+                    <p class="ChatLog__message">
+                        <a href="~/Private_Files/@(item.File_Name)" target="_blank" download="@(item.File_Name)"><span style="color: black;">@(item.File_Name)</span></a>
+                        <time class="ChatLog__timestamp">@item.Date_Time</time>
+                    </p>
+                </div>
+            }
+        }
+    }
+}
+else
+{
+    <h3 class="noMessage">You do not have files shared.</h3>
+}

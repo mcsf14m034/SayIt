@@ -1,0 +1,98 @@
+﻿@{
+    Layout = null;
+}
+
+@using SayIt.Models
+@model IEnumerable<SayIt.Models.PublicMessage>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel="icon" href="~/Content/logo.png" type="image/png" />
+    <title>Say It</title>
+    <style>
+        .img-size {
+            width: 22px;
+            height: 22px;
+            margin-left: 4px;
+            margin-right: 6px;
+            transform: scale(2.0);
+        }
+
+        .navbar-default {
+            background-color: #0084ff;
+            color: #fff;
+            font-weight: 400;
+            font-size: 18px;
+            font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+
+        .col-md-2 {
+            border-left: 1px solid black;
+        }
+
+        .col-md-10 {
+            border-right: 1px solid black;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">
+                    <img class="img-responsive img-size" alt="SayIt" src="~/Content/navbar-logo.png" />
+                </a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: white;">Account <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/Accounts/ManageProfile">Account Settings</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="/Accounts/Signout">Sign out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" onclick="location.href='/Admin/Index'">Back To Home</button>
+                <div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Message</th>
+                                <th>Date & Time</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@(item.User.First_Name + " " + item.User.Last_Name) (@item.User_Id)</td>
+                                    <td>@item.Message</td>
+                                    <td>@item.Data_Time</td>
+                                    <td><button type="submit" onclick="location.href='/Admin/DeletePublicMessage/@item.Id'">Delete</button></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-2.2.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+</body>
+</html>

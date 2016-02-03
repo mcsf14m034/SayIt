@@ -1,0 +1,260 @@
+﻿@{
+    Layout = null;
+}
+
+@using SayIt.Models
+@model User
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel="icon" href="~/Content/logo.png" type="image/png" />
+    <title>Say It</title>
+    <style>
+        .img-size {
+            width: 22px;
+            height: 22px;
+            margin-left: 4px;
+            margin-right: 6px;
+            transform: scale(2.0);
+        }
+
+        .navbar-default {
+            background-color: #0084ff;
+            color: #fff;
+            font-weight: 400;
+            font-size: 18px;
+            font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+
+        .col-md-2 {
+            border-left: 1px solid black;
+        }
+
+        .col-md-10 {
+            border-right: 1px solid black;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/Main/Index">
+                    <img class="img-responsive img-size" alt="SayIt" src="~/Content/navbar-logo.png" />
+                </a>
+            </div>
+
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: white;">Account <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/Accounts/ManageProfile">Account Settings</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="/Accounts/Signout">Sign out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--Section-->
+    <section>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div style="margin-left: auto; margin-right: auto; width: 40%">
+                        <h1 class="title">Manage Profile</h1>
+                        <p class="title_description">It's free and always will be.</p>
+                        <p id="emailMessage" style="color:red;">@TempData["Message"]</p>
+                        <form action="/Accounts/UpdateProfile" method="post">
+                            <div class="form-group">
+                                <input class="form-control field" type="text" name="First_Name" placeholder="First Name" value=@Model.First_Name autofocus="autofocus" required="required" />
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control field" type="text" name="Last_Name" placeholder="Last Name" value=@Model.Last_Name required="required" />
+                            </div>
+                            <div id="validation" class="form-group">
+                                <input id="email" class="form-control field" type="email" name="Email" placeholder="Email" value=@Model.Email required="required" />
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control field" type="password" name="Password" placeholder="Password" value=@Model.Password required="required" />
+                            </div>
+                            <p class="form-label">Birthday</p>
+                            <div class="birthday">
+                                <div class="form-group birthday">
+                                    <select name="month" class="form-control width-1-3 birthday" required="required">
+                                        @if (Model.Date_Of_Birth.Month == 1)
+                                        {
+                                            <option selected="selected" value="1">January</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="1">January</option>
+                                        }
+                                        @if (Model.Date_Of_Birth.Month == 2)
+                                        {
+                                            <option selected="selected" value="2">February</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="2">February</option>
+                                        }
+                                        @if (Model.Date_Of_Birth.Month == 3)
+                                        {
+                                            <option selected="selected" value="3">March</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="3">March</option>
+                                        }
+                                        @if (Model.Date_Of_Birth.Month == 4)
+                                        {
+                                            <option selected="selected" value="4">April</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="4">April</option>
+                                        }
+                                        @if (Model.Date_Of_Birth.Month == 5)
+                                        {
+                                            <option selected="selected" value="5">May</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="5">May</option>
+                                        }
+                                        @if (Model.Date_Of_Birth.Month == 6)
+                                        {
+                                            <option selected="selected" value="6">June</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="6">June</option>
+                                        }
+                                        @if (Model.Date_Of_Birth.Month == 7)
+                                        {
+                                            <option selected="selected" value="7">July</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="7">July</option>
+                                        }
+                                        @if (Model.Date_Of_Birth.Month == 8)
+                                        {
+                                            <option selected="selected" value="8">August</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="8">August</option>
+                                        }
+                                        @if (Model.Date_Of_Birth.Month == 9)
+                                        {
+                                            <option selected="selected" value="9">September</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="9">September</option>
+                                        }
+                                        @if (Model.Date_Of_Birth.Month == 10)
+                                        {
+                                            <option selected="selected" value="10">October</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="10">October</option>
+                                        }
+                                        @if (Model.Date_Of_Birth.Month == 11)
+                                        {
+                                            <option selected="selected" value="11">November</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="11">November</option>
+                                        }
+                                        @if (Model.Date_Of_Birth.Month == 12)
+                                        {
+                                            <option selected="selected" value="12">December</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="12">December</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group birthday">
+                                    <select name="day" class="form-control width-1-3 birthday" required="required">
+                                        @for (int i = 1; i <= 31; i++)
+                                        {
+                                            if (Model.Date_Of_Birth.Day == i)
+                                            {
+                                                <option selected="selected" value=@i>@i</option>
+                                            }
+                                            else
+                                            {
+                                                <option value=@i>@i</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group birthday_last">
+                                    <select name="year" class="form-control width-1-3 birthday_last" required="required">
+                                        @for (int i = DateTime.Now.Year; i >= 1900; i--)
+                                        {
+                                            if (Model.Date_Of_Birth.Year == i)
+                                            {
+                                                <option selected="selected" value=@i>@i</option>
+                                            }
+                                            else
+                                            {
+                                                <option value=@i>@i</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <p class="form-label">Gender</p>
+                            <div>
+                                <div class="form-group">
+                                    <select name="Gender" class="form-control" required="required">
+                                        @if (Model.Gender == "male")
+                                        {
+                                            <option selected="selected" value="male">Male</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="male">Male</option>
+                                        }
+                                        @if (Model.Gender == "Female")
+                                        {
+                                            <option selected="selected" value="female">Female</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="female">Female</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input class="btn btn-block button" type="submit" value="Update Profile" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="~/Scripts/jquery-2.2.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+</body>
+</html>

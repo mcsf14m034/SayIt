@@ -1,0 +1,547 @@
+﻿.img-size {
+    width: 22px;
+    height: 22px;
+    margin-left: 4px;
+    margin-right: 6px;
+    transform: scale(2.0);
+}
+
+.navbar-default {
+    background-color: #0084ff;
+    color: #fff;
+    font-weight: 400;
+    font-size: 18px;
+    font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+/*#searchBox {
+            width: 200%;
+        }*/
+
+#sendMessageButton {
+    font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #0084ff;
+    border: 1px solid #0084ff;
+    border-radius: 4px;
+}
+
+    #sendMessageButton:hover {
+        background-color: #0084cc;
+    }
+
+
+
+@media screen and (min-width: 1366px) {
+    #sendFilesButton {
+        font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        color: #fff;
+        background-color: #0084ff;
+        border: 1px solid #0084ff;
+        border-radius: 4px;
+        margin-left: -2.4vw;
+        margin-top: 0;
+    }
+
+        #sendFilesButton:hover {
+            background-color: #0084cc;
+        }
+}
+
+@media screen and (min-width: 1600px) {
+    #sendFilesButton {
+        font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        color: #fff;
+        background-color: #0084ff;
+        border: 1px solid #0084ff;
+        border-radius: 4px;
+        margin-left: -22%;
+        margin-top: 0;
+    }
+
+        #sendFilesButton:hover {
+            background-color: #0084cc;
+        }
+}
+
+.add_friend {
+    font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #0084ff;
+    border: 1px solid #0084ff;
+    border-radius: 4px;
+}
+
+    .add_friend:hover {
+        background-color: #0084ff;
+        color: white;
+    }
+
+.myEvent {
+    background-color: white;
+    width: 130px;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+}
+
+    .myEvent:hover {
+        background-color: white;
+        width: 130px;
+        text-align: center;
+    }
+
+    .myEvent:focus {
+        background-color: white;
+        width: 130px;
+        text-align: center;
+    }
+
+    .myEvent:active {
+        background-color: white;
+        width: 130px;
+        text-align: center;
+    }
+
+.myProfileEvent {
+    background-color: white;
+    width: 120px;
+    text-align: center;
+}
+
+    .myProfileEvent:hover {
+        background-color: white;
+        width: 120px;
+        text-align: center;
+    }
+
+    .myProfileEvent:focus {
+        background-color: white;
+        width: 120px;
+        text-align: center;
+    }
+
+    .myProfileEvent:active {
+        background-color: white;
+        width: 120px;
+        text-align: center;
+    }
+
+.downloadButton {
+    background-color: #0084ff;
+    width: 120px;
+    color: white;
+    font-weight: 500;
+    text-align: center;
+}
+
+    .downloadButton:hover {
+        background-color: #0084ff;
+        width: 120px;
+        color: white;
+        text-align: center;
+    }
+
+    .downloadButton:focus {
+        background-color: #08f;
+        width: 120px;
+        text-align: center;
+        color: white;
+    }
+
+    .downloadButton:active {
+        background-color: #0084ff;
+        width: 120px;
+        text-align: center;
+        color: white;
+    }
+
+.friendEvent {
+    font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+    background-color: #0084ff;
+    font-weight: 500;
+    font-size: 15px;
+    width: 130px;
+    text-align: center;
+    border: 1px solid #0084ff;
+    border-radius: 4px;
+    color: white;
+}
+
+    .friendEvent:hover {
+        background-color: #0084ff;
+        border: 1px solid #0084ff;
+        border-radius: 4px;
+        color: white;
+    }
+
+    .friendEvent:focus {
+        background-color: #0084ff;
+        border: 1px solid #0084ff;
+        border-radius: 4px;
+        color: white;
+    }
+
+    .friendEvent:active {
+        background-color: #0084ff;
+        color: white;
+        border: 1px solid #0084ff;
+        border-radius: 4px;
+    }
+
+    .friendEvent:visited {
+        background-color: #0084ff;
+        border: 1px solid #0084ff;
+        border-radius: 4px;
+        color: white;
+    }
+
+#search_users_button {
+    display: none;
+}
+
+.panel-footer {
+    background-color: #0084ff;
+    color: #fff;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+footer small {
+    vertical-align: middle;
+}
+
+#search_bars {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #fff;
+}
+
+ul.ChatLog {
+    list-style: none;
+}
+
+.ChatLog {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+    .ChatLog .ChatLog__entry {
+        margin: .5em;
+    }
+
+.ChatLog__entry {
+    display: flex;
+    margin-left: 0;
+    flex-direction: row;
+    align-items: flex-end;
+    max-width: 100%;
+}
+
+    .ChatLog__entry.ChatLog__entry_mine {
+        flex-direction: row-reverse;
+    }
+
+.ChatLog__avatar {
+    flex-shrink: 0;
+    flex-grow: 0;
+    z-index: 1;
+    height: 36px;
+    width: 36px;
+    border-radius: 18px;
+}
+
+.profile_pic {
+    flex-shrink: 0;
+    flex-grow: 0;
+    z-index: 1;
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+}
+
+.ChatLog__entry.ChatLog__entry_mine .ChatLog__avatar {
+    display: none;
+}
+
+.ChatLog__entry .ChatLog__message {
+    position: relative;
+    margin: 0 12px;
+}
+
+    .ChatLog__entry .ChatLog__message::before {
+        position: absolute;
+        right: auto;
+        bottom: .6em;
+        left: -12px;
+        height: 0;
+        content: '';
+        border: 6px solid transparent;
+        border-right-color: rgba(0, 0, 0, 0.10);
+        z-index: 2;
+    }
+
+.ChatLog__entry.ChatLog__entry_mine .ChatLog__message::before {
+    right: -12px;
+    bottom: .6em;
+    left: auto;
+    border: 6px solid transparent;
+    border-left-color: #08f;
+}
+
+.ChatLog__message {
+    background-color: rgba(0, 0, 0, 0.10);
+    padding: .5em;
+    border-radius: 4px;
+    font-weight: lighter;
+    max-width: 60%;
+}
+
+.ChatLog__entry.ChatLog__entry_mine .ChatLog__message {
+    border-top: 1px solid #07f;
+    border-bottom: 1px solid #07f;
+    background-color: #08f;
+    color: #fff;
+}
+
+.ChatLog__message .ChatLog__timestamp {
+    display: none;
+}
+
+#vr1 {
+    width: 1px;
+    background-color: #0084FF;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 25.5vw;
+}
+
+#vr2 {
+    width: 1px;
+    background-color: #0084FF;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 74.5vw;
+}
+
+.inTitle {
+    font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.50);
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 5%;
+}
+
+.noMessage {
+    font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.50);
+    text-align: center;
+    margin-bottom: 5%;
+}
+
+.fl-image {
+    margin: 10px;
+    margin-right: 20px;
+    float: left;
+}
+
+.friendLink {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 5px;
+    height: 70px;
+    width: 100%;
+    display: block;
+    cursor: pointer;
+}
+
+.activeUser {
+    background-color: rgba(0, 0, 0, 0.10);
+}
+
+.friendLink h4 {
+    padding-top: 13px;
+    margin-bottom: 4px;
+    font-size: 150%;
+}
+
+.friendLink searchh4 {
+    padding-top: 13px;
+    margin-bottom: 4px;
+    font-size: 150%;
+}
+
+.friendLink p {
+    font-size: 90%;
+}
+
+.friendLink searchp {
+    font-size: 90%;
+}
+
+.friendLink:hover {
+    background-color: rgba(0, 0, 0, 0.10);
+}
+
+.friendLink input {
+    float: right;
+    margin-top: -50px;
+    margin-right: 10px;
+}
+
+    .friendLink input.second {
+        float: right;
+        margin-top: -50px;
+        margin-right: 150px;
+        width: 130px;
+        text-align: center;
+    }
+
+.hideButton:hover {
+    opacity: 0.0;
+}
+
+.separator {
+    margin-top: 5px;
+    margin-bottom: -5px;
+}
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+
+    .fileUpload input.upload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+
+.profileImageHover:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.myScroll {
+    overflow: hidden;
+}
+
+    .myScroll:hover {
+        overflow-y: auto;
+    }
+
+.myMargin {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+ul.myFile {
+    list-style: none;
+}
+
+.myFile {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+    .myFile .myFile__entry {
+        margin: .5em;
+    }
+
+.myFile__entry {
+    display: flex;
+    margin-left: 0;
+    flex-direction: row;
+    align-items: flex-end;
+    max-width: 100%;
+}
+
+    .myFile__entry.myFile__entry_mine {
+        flex-direction: row-reverse;
+    }
+
+.myFile__avatar {
+    flex-shrink: 0;
+    flex-grow: 0;
+    z-index: 1;
+    height: 36px;
+    width: 36px;
+    border-radius: 18px;
+}
+
+.myFile__entry.myFile__entry_mine .myFile__avatar {
+    display: none;
+}
+
+.myFile__entry .myFile__message {
+    position: relative;
+    margin: 0 12px;
+}
+
+    .myFile__entry .myFile__message::before {
+        position: absolute;
+        right: auto;
+        bottom: .6em;
+        left: -12px;
+        height: 0;
+        content: '';
+        border: 6px solid transparent;
+        border-right-color: rgba(0, 0, 0, 0.10);
+        z-index: 2;
+    }
+
+.myFile__entry.myFile__entry_mine .myFile__message::before {
+    right: -12px;
+    bottom: .6em;
+    left: auto;
+    border: 6px solid transparent;
+    border-left-color: rgba(0, 0, 0, 0.10);
+}
+
+.myFile__message {
+    background-color: rgba(0, 0, 0, 0.10);
+    padding: .5em;
+    border-radius: 4px;
+    font-weight: lighter;
+    max-width: 60%;
+}
+
+.myFile__entry.myFile__entry_mine .myFile__message {
+    background-color: rgba(0, 0, 0, 0.10);
+}
+
+.myFile__message .myFile__timestamp {
+    display: none;
+}

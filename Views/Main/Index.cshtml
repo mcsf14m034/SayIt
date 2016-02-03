@@ -1,0 +1,611 @@
+﻿@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+@using SayIt.Models
+@model User
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <h3 class="inTitle" style="margin-bottom: 10px;">Friends</h3>
+            <div id="FriendList" class="myScroll" style="height:77vh;"><h3 class="noMessage">You do not have any friend.</h3></div>
+        </div>
+        <div class="col-md-6">
+            <div id="main_window">
+                <h3 id="main_title" class="inTitle" style="margin-bottom: 20px;"></h3>
+                <hr class="separator" style="margin-bottom: 10px;" />
+                <ul id="chatBody" class="ChatLog myScroll" style="height: 74vh;">
+                    <li>
+                        <h3 class="noMessage">Start conversation now.</h3>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div id="profile_notifications">
+                <div id="profile">
+                    <h3 class="inTitle">My Profile</h3>
+                    <div class="friendLink">
+                        <img class="profile_pic fl-image" src='~/Profile_Pictures/profile_@(((User)Session["User"]).Id).jpg' />
+                        <h4>@(((User)Session["User"]).First_Name + " " + ((User)Session["User"]).Last_Name)</h4>
+                        <p>Active now</p>
+                        <input type="button" data-toggle="modal" data-target="#updateProfilePicModal" class="btn btn-default button myProfileEvent" value="Update Picture" />
+                    </div>
+
+                    <!-- Modal -->
+                    <div id="updateProfilePicModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: rgb(0, 120, 255);">
+                                    <h4 class="modal-title" style="color: white;">Update Profile Picture</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row" style="height: 36vh;">
+                                        <div class="col-md-6">
+                                            <img id="picPlace" class="profileImageHover" src='~/Profile_Pictures/profile_@(((User)Session["User"]).Id).jpg' style="margin-left:130px; margin-top: 100px; display: block; height: 50px; width: 50px; border-radius: 25px; transform: scale(4,4);" />
+                                            <h3 style="margin-left:110px; margin-top: 90px;">@(((User)Session["User"]).First_Name + " " + ((User)Session["User"]).Last_Name)</h3>
+                                        </div>
+                                        <div class="col-md-6">
+
+                                            <div class="fileUpload btn btn-default button myEvent" style="margin-left: auto; margin-right: auto; display: block; margin-top: 85px; ">
+                                                <span>Select Picture</span>
+                                                <input type="file" id="pic_input" accpet="image/jpg,image/jpeg,image/png,image/tiff" class="upload" onchange="loadImage(event)" />
+                                            </div>
+                                            <input type="button" id="@(((User)Session["User"]).Id)_pic" data-userID="@(((User)Session["User"]).Id)" data-operation="update_pic" data-from="profile" class="btn btn-default button friendEvent" style="margin-left: auto; margin-right: auto; display: block;" value="Update Profile" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <hr />
+                <h3 class="inTitle">Files Shared</h3>
+                <div id="notifications" class="myScroll" style="height: 56.8vh;">
+                    <h3 class="noMessage">You do not have files shared.</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="search_bars" class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <input class="form-control field" type="text" id="searchFriends" placeholder="Search for friends" required="required" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-10">
+                <div class="form-group">
+                    <input class="form-control field" type="text" id="textMessage" placeholder="Type a message..." autofocus="autofocus" required="required" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <input type="hidden" id="opened_window" value="messaging" />
+                    <input type="hidden" id="receiver_id" value="" />
+                    <input type="hidden" id="sender_id" value="@(((User)Session["User"]).Id)" />
+                    <input class="btn btn-block button" type="submit" id="sendMessageButton" value="Send" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <div class="col-md-8">
+                    <input class="form-control field" type="text" id="searchFiles" style="margin-left: -6%" ; placeholder="Search for files" required="required" />
+                </div>
+                <div class="col-md-4">
+                    <div class="fileUpload btn btn-default button friendEvent" id="sendFilesButton">
+                        <span>Send Files</span>
+                        <input type="file" id="file_input" class="upload" multiple="multiple" data-userID="@(((User)Session["User"]).Id)" data-operation="share_files" data-from="filesShared" />
+                    </div>
+                    @*<input type="button" id="send_files_button" data-userID="@(((User)Session["User"]).Id)" data-operation="share_files" data-from="filesShared" class="btn btn-default button friendEvent" style="display: inline-block;" value="Send Files" />*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to execute as page loads
+    $(document).ready(function () {
+        $(".fancybox").fancybox({
+            openEffect: 'elastic',
+            closeEffect: 'elastic',
+
+            helpers : {
+                overlay : {
+                    css : {
+                        'background' : 'rgba(0, 0, 0, 0.90)'
+                    }
+                }
+            }
+        });
+        //$('#searchBox').on('keyup', function () {
+        //    var currentValue = $(this).val();
+        //    var ajaxMethodUrl = "/Main/SearchUsers?keyword=" + currentValue;
+        //    $(this).autocomplete({
+        //        source: function (request, response) {
+        //            var customer = new Array();
+        //            $.ajax({
+        //                async: false,
+        //                cache: false,
+        //                type: "Get",
+        //                url: ajaxMethodUrl,
+        //                success: function (data) {
+
+        //                    for (var i = 0; i < data.length ; i++) {
+        //                        customer[i] = { label: data[i], Id: data[i] };
+        //                    }
+        //                }
+        //            });
+        //            response(customer);
+        //        }
+        //    });
+        //});
+
+        var friendRequestButtonID;
+
+
+        $('#searchUsers').on('click', function () {
+            $('#main_title').text("People");
+            $('#chatBody').load("/Main/SearchUsers?keyword=" + encodeURIComponent($('#searchBox').val().trim()) + "&userID=" + @Model.Id);
+        });
+
+        $('#manageFriends').on('click', function () {
+            $('#main_title').text("Manage Friends");
+            $('#chatBody').load("/Main/ManageFriends/" + @Model.Id);
+        });
+
+        $('#searchBox').on('keypress', function(event) {
+            if (event.which == 13)
+            {
+                @*$.get("/Main/SearchUsers?keyword=" + $(this).val() + "&userID=" + @Model.Id, function(data) {
+                        $('#main_window').append(data);
+                    });*@
+                $('#main_title').text("People");
+                $('#chatBody').load("/Main/SearchUsers?keyword=" + encodeURIComponent($('#searchBox').val().trim()) + "&userID=" + @Model.Id);
+                $(this).val('');
+            }
+        });
+
+        $('#searchFriends').on('keyup', function() {
+            $('#FriendList').load("/Main/SearchFriends?keyword=" + encodeURIComponent($(this).val().trim()));
+        });
+
+        $('#searchFiles').on('keyup', function() {
+            $('#notifications').load("/Main/SearchFiles?keyword=" + encodeURIComponent($(this).val().trim()) + "&receiverID=" + $('#receiver_id').val());
+        });
+
+        //function getScrolled() {
+        //    $('.ChatLog').animate({ scrollTop: $('.ChatLog')[0].scrollHeight * ($('.ChatLog')[0].childElementCount + 2) }, "slow");
+        //}
+
+        $('#FriendList').on('click', 'div.friendLink', function() {
+            $('#main_title').text($(this).find('.searchh4').text());
+            var user_id = $(this).data('userid');
+            $('.ChatLog').load("/Main/GetMessages/" + user_id).ready(function() {
+                $container = $('#chatBody');
+                $container.animate({ scrollTop: $container[0].scrollHeight }, "fast");
+            }).ready(function() {
+                $('#notifications').load("/Main/GetFiles/" + user_id).ready(function() {
+                    $container = $('#notifications');
+                    $container.animate({ scrollTop: $container[0].scrollHeight }, "fast");
+                });
+            })
+            $('#receiver_id').val($(this).data('userid'));
+        });
+
+
+        $('#publicChat').on('click', function() {
+            $('#main_title').text("Public Chat Room");
+            $('#chatBody').load("/Main/GetPublicMessages");
+            $('#notifications').load("/Main/GetPublicFiles");
+            $('#receiver_id').val("public");
+        });
+
+        //setInterval(getScrolled(), 100);
+
+        // Reference the auto-generated proxy for the hub.
+        var chat = $.connection.chatHub;
+
+        // Call to the function for registerig client methods
+        registerClientMethods(chat);
+
+        // Start the hub
+        $.connection.hub.start().done(function () {
+            //registerEvents(chatHub);
+            chat.server.connect(@Model.Id, "@Model.First_Name" + " " + "@Model.Last_Name" + " ");
+
+
+        });
+
+        function registerClientMethods(chatHub) {
+            // Function for calling by the server on client-end on log in
+            chatHub.client.onConnected = function () {
+                $('#FriendList').load("/Main/SearchFriends?keyword=" + '');
+
+
+                setTimeout(function() {
+                    var firstFriendID = $('#FriendList div').first();
+                    if (firstFriendID != null)
+                    {
+
+                        $('#main_title').text($(firstFriendID).find('.searchh4').text());
+
+                        $('#chatBody').load("/Main/GetMessages/" + $(firstFriendID).data('userid'));
+
+                        $('#notifications').load("/Main/GetFiles/" + $(firstFriendID).data('userid'));
+
+                        $('#receiver_id').val($(firstFriendID).data('userid'));
+
+                        setTimeout(function() {
+                            $container = $('#chatBody');
+                            $container.animate({ scrollTop: $container[0].scrollHeight }, "fast");
+                            $container = $('#notifications');
+                            $container.animate({ scrollTop: $container[0].scrollHeight }, "fast");
+                        }, 100);
+                    }
+                }, 1000);
+                // Add all users
+                //for (var i = 0; i < allUsers.length; i++) {
+                //    AddUser(chatHub, allUsers[i].Id, allUsers[i].First_Name);
+                //}
+
+                // Add all messages
+                //for (var i = 0; i < messages.length; i++) {
+                //    AddMessage(messages[i].UserName, messages[i].Message);
+                //}
+            }
+
+            // Client method for sending private messages
+            chatHub.client.sendPrivateMessage = function (receiverId, senderId, message) {
+                if (receiverId == senderId)
+                {
+                    $container = $('.ChatLog');
+                    $('.ChatLog').append('<li class="ChatLog__entry ChatLog__entry_mine"><img class="ChatLog__avatar" src="/Profile_Pictures/profile_@(((User)Session["User"]).Id).jpg" /><p class="ChatLog__message">' + message + '<time class="ChatLog__timestamp">1 minutes ago</time></p></li>');
+                    $container.animate({ scrollTop: $container[0].scrollHeight }, "slow");
+                }
+                else
+                {
+                    if ($('#receiver_id').val() == senderId)
+                    {
+                        $container = $('.ChatLog');
+                        $('.ChatLog').append('<li class="ChatLog__entry"><img class="ChatLog__avatar" src="/Profile_Pictures/profile_' + senderId + '.jpg" /><p class="ChatLog__message">' + message + '<time class="ChatLog__timestamp">1 minute ago</time></p></li>');
+                        $container.animate({ scrollTop: $container[0].scrollHeight }, "slow");
+                    }
+                }
+            }
+
+            chatHub.client.sendPrivateFile = function (receiverId, senderId, fileName, fileType) {
+                if (receiverId == senderId)
+                {
+                    $container = $('#notifications');
+                    if (fileType == "image")
+                    {
+                        $('#notifications').append('<div class="myFile__entry myFile__entry_mine myMargin"><img class="myFile__avatar" src="Profile_Pictures/profile_@(((User)Session["User"]).Id).jpg" /><p class="myFile__message"><a href="Private_Files/' + fileName + '" class="fancybox" rel="gallery"><img src="Private_Files/' + fileName + '" class="img-thumbnail profileImageHover" style="max-width: 200px; max-height: 200px;" /></a><time class="myFile__timestamp">A second ago</time></p></div>');
+                    }
+                    else
+                    {
+                        $('#notifications').append('<div class="myFile__entry myFile__entry_mine myMargin"><img class="myFile__avatar" src="Profile_Pictures/profile_@(((User)Session["User"]).Id).jpg" /><p class="myFile__message"><a href="Private_Files/' + fileName + '" target="_blank" download="' + fileName + '"><span style="color: black;">' + fileName + '</span></a><time class="myFile__timestamp">A second ago</time></p></div>');
+
+                    }
+                    $container.animate({ scrollTop: $container[0].scrollHeight }, "slow");
+                }
+                else
+                {
+                    if ($('#receiver_id').val() == senderId)
+                    {
+                        $container = $('#notifications');
+                        if (fileType == "image")
+                        {
+                            $('#notifications').append('<div class="ChatLog__entry myMargin"><img class="ChatLog__avatar" src="Profile_Pictures/profile_' + senderId + '.jpg" /><p class="ChatLog__message"><a href="Private_Files/' + fileName + '" class="fancybox" rel="gallery"><img src="Private_Files/' + fileName + '" class="img-thumbnail profileImageHover" style="max-width: 200px; max-height: 200px;" /></a><time class="ChatLog__timestamp">A second ago</time></p></div>');
+                        }
+                        else
+                        {
+                            $('#notifications').append('<div class="ChatLog__entry myMargin"><img class="ChatLog__avatar" src="Profile_Pictures/profile_' + senderId + '.jpg" /><p class="ChatLog__message"><a href="Private_Files/' + fileName + '" target="_blank" download="' + fileName + '"><span style="color: black;">' + fileName + '</span></a><time class="ChatLog__timestamp">A second ago</time></p></div>');
+                        }
+                        $container.animate({ scrollTop: $container[0].scrollHeight }, "slow");
+                    }
+                }
+            }
+
+            chatHub.client.sendPublicFile = function (fromUserId, fileName, fileType) {
+                if (fromUserId == $('#sender_id').val() && $('#receiver_id').val() == "public")
+                {
+                    $container = $('#notifications');
+                    if (fileType == "image")
+                    {
+                        $('#notifications').append('<div class="myFile__entry myFile__entry_mine myMargin"><img class="myFile__avatar" src="Profile_Pictures/profile_@(((User)Session["User"]).Id).jpg" /><p class="myFile__message"><a href="Public_Files/' + fileName + '" class="fancybox" rel="gallery"><img src="Public_Files/' + fileName + '" class="img-thumbnail profileImageHover" style="max-width: 200px; max-height: 200px;" /></a><time class="myFile__timestamp">A second ago</time></p></div>');
+                    }
+                    else
+                    {
+                        $('#notifications').append('<div class="myFile__entry myFile__entry_mine myMargin"><img class="myFile__avatar" src="Profile_Pictures/profile_@(((User)Session["User"]).Id).jpg" /><p class="myFile__message"><a href="Public_Files/' + fileName + '" target="_blank" download="' + fileName + '"><span style="color: black;">' + fileName + '</span></a><time class="myFile__timestamp">A second ago</time></p></div>');
+
+                    }
+                    $container.animate({ scrollTop: $container[0].scrollHeight }, "slow");
+                }
+                else if ($('#receiver_id').val() == "public")
+                {
+                    $container = $('#notifications');
+                    if (fileType == "image")
+                    {
+                        $('#notifications').append('<div class="ChatLog__entry myMargin"><img class="ChatLog__avatar" src="Profile_Pictures/profile_' + fromUserId + '.jpg" /><p class="ChatLog__message"><a href="Public_Files/' + fileName + '" class="fancybox" rel="gallery"><img src="Public_Files/' + fileName + '" class="img-thumbnail profileImageHover" style="max-width: 200px; max-height: 200px;" /></a><time class="ChatLog__timestamp">A second ago</time></p></div>');
+                    }
+                    else
+                    {
+                        $('#notifications').append('<div class="ChatLog__entry myMargin"><img class="ChatLog__avatar" src="Profile_Pictures/profile_' + fromUserId + '.jpg" /><p class="ChatLog__message"><a href="Public_Files/' + fileName + '" target="_blank" download="' + fileName + '"><span style="color: black;">' + fileName + '</span></a><time class="ChatLog__timestamp">A second ago</time></p></div>');
+                    }
+                    $container.animate({ scrollTop: $container[0].scrollHeight }, "slow");
+                }
+            }
+
+            // Client method for sending private messages
+            chatHub.client.sendPublicMessage = function (fromUserId, message) {
+                if (fromUserId == $('#sender_id').val() && $('#receiver_id').val() == "public")
+                {
+                    $container = $('.ChatLog');
+                    $('.ChatLog').append('<li class="ChatLog__entry ChatLog__entry_mine"><img class="ChatLog__avatar" src="/Profile_Pictures/profile_@(((User)Session["User"]).Id).jpg" /><p class="ChatLog__message">' + message + '<time class="ChatLog__timestamp">1 minutes ago</time></p></li>');
+                    $container.animate({ scrollTop: $container[0].scrollHeight }, "slow");
+                }
+                else if ($('#receiver_id').val() == "public")
+                {
+                    $container = $('.ChatLog');
+                    $('.ChatLog').append('<li class="ChatLog__entry"><img class="ChatLog__avatar" src="/Profile_Pictures/profile_' + fromUserId + '.jpg" /><p class="ChatLog__message">' + message + '<time class="ChatLog__timestamp">1 minute ago</time></p></li>');
+                    $container.animate({ scrollTop: $container[0].scrollHeight }, "slow");
+                }
+            }
+
+            chatHub.client.updateButton = function (toUserDbId) {
+                if ($('#main_window #user-' + toUserDbId + ' #' + toUserDbId).data('operation') == "add")
+                {
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId).data('operation', 'cancel');
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId).val('Cancel Request');
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId).addClass('myEvent');
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId).removeClass('friendEvent');
+                }
+                else if ($('#main_window #' + toUserDbId).data('operation') == "cancel" && $('#main_window #' + toUserDbId).data('from') == "search")
+                {
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId).data('operation', 'add');
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId).val('Add Friend');
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId).addClass('friendEvent');
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId).removeClass('myEvent');
+                }
+                else if ($('#main_window #' + toUserDbId).data('operation') == "cancel" && $('#main_window #' + toUserDbId).data('from') == "manage")
+                {
+                    $('#main_window #user-' + toUserDbId).remove();
+                }
+            }
+
+            chatHub.client.responseToAcceptAction = function (toUserDbId) {
+                if ($('#main_window #user-' + toUserDbId + ' #' + toUserDbId + 'a').data('from') == "search")
+                {
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId + 'a').remove();
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId + 'd').remove();
+                    $('#main_window #user-' + toUserDbId).append('<input type="button" id="' + toUserDbId + 'u" data-operation="unfriend" class="btn btn-default button myEvent" value="Unfriend" />');
+                    $('#main_window #user-' + toUserDbId).append('<input type="button" id="' + toUserDbId + 'f" data-userID="' + toUserDbId + '" data-operation="unfriend" data-from="search" class="btn btn-default button myEvent hideButton" value="Friends" />');
+                }
+                else if ($('#main_window #user-' + toUserDbId + ' #' + toUserDbId + 'a').data('from') == "manage")
+                {
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId + 'a').remove();
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId + 'd').remove();
+                    $('#main_window #user-' + toUserDbId).append('<input type="button" id="' + toUserDbId + 'u" data-operation="unfriend" data-from="manage" class="btn btn-default button myEvent" value="Unfriend" />');
+                    $('#main_window #user-' + toUserDbId).append('<input type="button" id="' + toUserDbId + 'f" data-userID="' + toUserDbId + '" data-from="manage" data-operation="unfriend" class="btn btn-default button myEvent hideButton" value="Friends" />');
+                }
+            }
+
+            chatHub.client.responseToUnfriendAction = function (toUserDbId) {
+                if ($('#main_window #user-' + toUserDbId + ' #' + toUserDbId + 'f').data('from') == "search")
+                {
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId + 'f').remove();
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId + 'u').remove();
+                    $('#main_window #user-' + toUserDbId).append('<input type="button" id="' + toUserDbId + '" data-userID="' + toUserDbId + '" data-operation="add" data-from="search" class="btn btn-default button friendEvent" value="Add Friend" />');
+                }
+                else if ($('#main_window #user-' + toUserDbId + ' #' + toUserDbId + 'f').data('from') == "manage")
+                {
+                    $('#main_window #user-' + toUserDbId).remove();
+                }
+            }
+
+            chatHub.client.responseToDeleteAction = function (toUserDbId) {
+                if ($('#main_window #user-' + toUserDbId + ' #' + toUserDbId + 'd').data('from') == "search")
+                {
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId + 'a').remove();
+                    $('#main_window #user-' + toUserDbId + ' #' + toUserDbId + 'd').remove();
+                    $('#main_window #user-' + toUserDbId).append('<input type="button" id="' + toUserDbId + '" data-userID="' + toUserDbId + '" data-operation="add" data-from="search" class="btn btn-default button friendEvent" value="Add Friend" />');
+                }
+                else if ($('#main_window #user-' + toUserDbId + ' #' + toUserDbId + 'd').data('from') == "manage")
+                {
+                    $('#main_window #user-' + toUserDbId).remove();
+                }
+            }
+
+            chatHub.client.addFriendRequestUpdate = function(fromUserId) {
+                $('#main_window #chatBody #user-' + fromUserId + ' #' + fromUserId).remove();
+                $('#main_window #chatBody #user-' + fromUserId).append('<input type="button" id="' + fromUserId + "a" + '" data-userID="' + fromUserId + '" data-operation="accept" data-from="search" class="btn btn-default button friendEvent second" value="Accept Request" />');
+                $('#main_window #chatBody #user-' + fromUserId).append('<input type="button" id="' + fromUserId + "d" + '" data-userID="' + fromUserId + '" data-operation="delete" data-from="search" class="btn btn-default myEvent button" value="Delete Request" />');
+            }
+
+            chatHub.client.deleteRequestUpdate = function() {
+
+            }
+        }
+
+        $('#sendMessageButton').on('click', function() {
+            if ($('#receiver_id').val() == "public")
+            {
+                var message = $('#textMessage').val();
+                if (message.length > 0) {
+                    chat.server.sendPublicMessage(message);
+                    $('#textMessage').val('');
+                }
+            }
+            else
+            {
+                var message = $('#textMessage').val();
+                if (message.length > 0) {
+                    chat.server.sendPrivateMessage($('#receiver_id').val(), message);
+                    $('#textMessage').val('');
+                }
+            }
+        });
+
+        $('#file_input').on('change', function() {
+            if ($('#receiver_id').val() == "public")
+            {
+                var formData = new FormData();
+                var totalFiles = document.getElementById("file_input").files.length;
+                for (var i = 0; i < totalFiles; i++)
+                {
+                    var file = document.getElementById("file_input").files[i];
+
+                    formData.append("file_input", file);
+                }
+                $.ajax({
+                    type: "POST",
+                    url: '/Main/UploadPublicFiles',
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        var splittedFile = $('#file_input').val().split("\\");
+                        var fileName = splittedFile[splittedFile.length - 1];
+                        var fileType = fileName.split(".");
+                        fileType = fileType[fileType.length - 1];
+                        if (fileType.toLowerCase() == "jpg" || fileType.toLowerCase() == "png")
+                        {
+                            fileType = "image";
+                        }
+                        chat.server.sendPublicFile(fileName, fileType);
+                    },
+                    error: function (error) {
+                        alert("Sending file failed!");
+                    }
+                });
+            }
+            else
+            {
+                var formData = new FormData();
+                var totalFiles = document.getElementById("file_input").files.length;
+                for (var i = 0; i < totalFiles; i++)
+                {
+                    var file = document.getElementById("file_input").files[i];
+
+                    formData.append("file_input", file);
+                }
+                formData.append("toUserDbId", $('#receiver_id').val());
+                $.ajax({
+                    type: "POST",
+                    url: '/Main/UploadFiles',
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        var splittedFile = $('#file_input').val().split("\\");
+                        var fileName = splittedFile[splittedFile.length - 1];
+                        var fileType = fileName.split(".");
+                        fileType = fileType[fileType.length - 1];
+                        if (fileType.toLowerCase() == "jpg" || fileType.toLowerCase() == "png")
+                        {
+                            fileType = "image";
+                        }
+                        chat.server.sendPrivateFile($('#receiver_id').val(), fileName, fileType);
+                    },
+                    error: function (error) {
+                        alert("Sending file failed!");
+                    }
+                });
+            }
+        });
+
+        $('#textMessage').on('keypress', function(event) {
+            if (event.which == 13)
+            {
+                if ($('#receiver_id').val() == "public")
+                {
+                    var message = $('#textMessage').val();
+                    if (message.length > 0) {
+                        chat.server.sendPublicMessage(message);
+                        $('#textMessage').val('');
+                    }
+                }
+                else
+                {
+                    var message = $('#textMessage').val();
+                    if (message.length > 0) {
+                        chat.server.sendPrivateMessage($('#receiver_id').val(), message);
+                        $('#textMessage').val('');
+                    }
+                }
+            }
+        });
+
+        $('#main_window').on('click', 'input', function() {
+            if ($(this).data('operation') == "add")
+            {
+                chat.server.addFriendRequest($(this).data('userid'));
+            }
+            else if ($(this).data('operation') == "cancel")
+            {
+                chat.server.cancelFriendRequest($(this).data('userid'));
+            }
+            else if ($(this).data('operation') == "accept")
+            {
+                chat.server.acceptFriendRequest($(this).data('userid'));
+            }
+            else if ($(this).data('operation') == "unfriend")
+            {
+                chat.server.unfriend($(this).data('userid'));
+            }
+            else if ($(this).data('operation') == "delete")
+            {
+                chat.server.deleteRequest($(this).data('userid'));
+            }
+        });
+
+        $("#profile_notifications #profile #@(((User)Session["User"]).Id)_pic").click(function () {
+            var formData = new FormData();
+            var totalFiles = document.getElementById("pic_input").files.length;
+            for (var i = 0; i < totalFiles; i++)
+            {
+                var file = document.getElementById("pic_input").files[i];
+
+                formData.append("pic_input", file);
+            }
+            $.ajax({
+                type: "POST",
+                url: '/Main/UploadProfilePicture',
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alert('Updating profile picture successful!');
+                },
+                error: function (error) {
+                    alert("Updating profile picture failed!");
+                }
+            });
+        });
+
+
+
+        // Function for adding user to the users box
+        @*function AddUser(chatHub, id, name) {
+                var code = "";
+                if (@Model.Id != id) {
+                    code = $('<a href="#" class="list-group-item active" id="' + id + '">' + name + '</a>');
+                    //$(code).click(function () {
+                    //    OpenPrivateChatWindow(chatHub, id, name);
+                    //});
+                    $("#UsersBox").append(code);
+                }
+            }*@
+    });
+</script>

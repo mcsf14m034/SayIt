@@ -1,0 +1,450 @@
+﻿@{
+    Layout = null;
+}
+
+@using SayIt.Models
+@model User
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel="icon" href="~/Content/logo.png" type="image/png" />
+    <title>Say It</title>
+    <style>
+        .img-size {
+            width: 22px;
+            height: 22px;
+            margin-left: 4px;
+            margin-right: 6px;
+            transform: scale(2.0);
+        }
+
+        .navbar-default {
+            background-color: #0084ff;
+            color: #fff;
+            font-weight: 400;
+            font-size: 18px;
+            font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+
+        /*#searchBox {
+            width: 200%;
+        }*/
+
+        #sendMessageButton {
+            font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: #fff;
+            background-color: #0084ff;
+            border: 1px solid #0084ff;
+            border-radius: 4px;
+        }
+
+            #sendMessageButton:hover {
+                color: white;
+            }
+
+        #sendMessageButtons:focus {
+            color: white;
+        }
+
+        #search_users_button {
+            display: none;
+        }
+
+        #message_bar {
+        }
+
+        .panel-footer {
+            background-color: #0084ff;
+            color: #fff;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer small {
+            vertical-align: middle;
+        }
+
+        #message_bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #fff;
+        }
+
+        ul.ChatLog {
+            list-style: none;
+        }
+
+        .ChatLog {
+            max-width: 20em;
+            margin: 0 auto;
+        }
+
+            .ChatLog .ChatLog__entry {
+                margin: .5em;
+            }
+
+        .ChatLog__entry {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            max-width: 100%;
+        }
+
+            .ChatLog__entry.ChatLog__entry_mine {
+                flex-direction: row-reverse;
+            }
+
+        .ChatLog__avatar {
+            flex-shrink: 0;
+            flex-grow: 0;
+            z-index: 1;
+            height: 50px;
+            width: 50px;
+            border-radius: 25px;
+        }
+
+        .ChatLog__entry.ChatLog__entry_mine .ChatLog__avatar {
+            display: none;
+        }
+
+        .ChatLog__entry .ChatLog__message {
+            position: relative;
+            margin: 0 12px;
+        }
+
+            .ChatLog__entry .ChatLog__message::before {
+                position: absolute;
+                right: auto;
+                bottom: .6em;
+                left: -12px;
+                height: 0;
+                content: '';
+                border: 6px solid transparent;
+                border-right-color: #ddd;
+                z-index: 2;
+            }
+
+        .ChatLog__entry.ChatLog__entry_mine .ChatLog__message::before {
+            right: -12px;
+            bottom: .6em;
+            left: auto;
+            border: 6px solid transparent;
+            border-left-color: #08f;
+        }
+
+        .ChatLog__message {
+            background-color: #ddd;
+            padding: .5em;
+            border-radius: 4px;
+            font-weight: lighter;
+            max-width: 70%;
+        }
+
+        .ChatLog__entry.ChatLog__entry_mine .ChatLog__message {
+            border-top: 1px solid #07f;
+            border-bottom: 1px solid #07f;
+            background-color: #08f;
+            color: #fff;
+        }
+
+        .ChatLog__message .ChatLog__timestamp {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">
+                    <img class="img-responsive img-size" alt="SayIt" src="~/Content/navbar-logo.png" />
+                </a>
+            </div>
+            <form class="navbar-form navbar-left" id="searchForm">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search" id="searchBox">
+                </div>
+                <input type="submit" name="SearchUsers" class="btn btn-default" value="Search" />
+                <input type="button" name="publicChat" class="btn btn-default" value="Friends Chat" />
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><input style="margin-top: 6.5%" type="button" name="manageFriends" class="btn btn-default" value="Manage Friends" /></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: white;"><span id="userSettings">Account</span> <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/Accounts/ManageProfile">Settings</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="/Accounts/Signout">Sign out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10">
+                <div id="chat_window" class="col-md-12" style=" height: 82vh; overflow:auto;  ">
+                    <ul class="ChatLog">
+                        <li class="ChatLog__entry">
+                            <img class="ChatLog__avatar" src="//placekitten.com/g/50/50" />
+                            <p class="ChatLog__message">
+                                Hello!
+                                <time class="ChatLog__timestamp">6 minutes ago</time>
+                            </p>
+                        </li>
+                        <li class="ChatLog__entry">
+                            <img class="ChatLog__avatar" src="//placekitten.com/g/50/50" />
+                            <p class="ChatLog__message">
+                                What is going on here?
+                                <time class="ChatLog__timestamp">5 minutes ago</time>
+                            </p>
+                        </li>
+                        <li class="ChatLog__entry ChatLog__entry_mine">
+                            <img class="ChatLog__avatar" src="//placekitten.com/56/56" />
+                            <p class="ChatLog__message">
+                                I have no idea.
+                                <time class="ChatLog__timestamp">4 minutes ago</time>
+                            </p>
+                        </li>
+                        <li class="ChatLog__entry">
+                            <img class="ChatLog__avatar" src="//placekitten.com/g/50/50" />
+                            <p class="ChatLog__message">
+                                I have a neat idea. Maybe I should explain it to you in detail?
+                                <time class="ChatLog__timestamp">3 minutes ago</time>
+                            </p>
+                        </li>
+                        <li class="ChatLog__entry ChatLog__entry_mine">
+                            <img class="ChatLog__avatar" src="//placekitten.com/50/50" />
+                            <p class="ChatLog__message">
+                                Sure thing. The more detail the better. In fact, if you could provide definitions for every single term you use, that would be terrific!
+                                <time class="ChatLog__timestamp">2 minutes ago</time>
+                            </p>
+                        </li>
+                        <li class="ChatLog__entry">
+                            <img class="ChatLog__avatar" src="//placekitten.com/g/50/50" />
+                            <p class="ChatLog__message">
+                                Hello!
+                                <time class="ChatLog__timestamp">6 minutes ago</time>
+                            </p>
+                        </li>
+                        <li class="ChatLog__entry">
+                            <img class="ChatLog__avatar" src="//placekitten.com/g/50/50" />
+                            <p class="ChatLog__message">
+                                What is going on here?
+                                <time class="ChatLog__timestamp">5 minutes ago</time>
+                            </p>
+                        </li>
+                        <li class="ChatLog__entry ChatLog__entry_mine">
+                            <img class="ChatLog__avatar" src="//placekitten.com/56/56" />
+                            <p class="ChatLog__message">
+                                I have no idea.
+                                <time class="ChatLog__timestamp">4 minutes ago</time>
+                            </p>
+                        </li>
+                        <li class="ChatLog__entry">
+                            <img class="ChatLog__avatar" src="//placekitten.com/g/50/50" />
+                            <p class="ChatLog__message">
+                                I have a neat idea. Maybe I should explain it to you in detail?
+                                <time class="ChatLog__timestamp">3 minutes ago</time>
+                            </p>
+                        </li>
+                        <li class="ChatLog__entry ChatLog__entry_mine">
+                            <img class="ChatLog__avatar" src="//placekitten.com/50/50" />
+                            <p class="ChatLog__message">
+                                Sure thing. The more detail the better. In fact, if you could provide definitions for every single term you use, that would be terrific!
+                                <time class="ChatLog__timestamp">2 minutes ago</time>
+                            </p>
+                        </li>
+                        <li class="ChatLog__entry">
+                            <img class="ChatLog__avatar" src="//placekitten.com/g/50/50" />
+                            <p class="ChatLog__message">
+                                Hello!
+                                <time class="ChatLog__timestamp">6 minutes ago</time>
+                            </p>
+                        </li>
+                        <li class="ChatLog__entry">
+                            <img class="ChatLog__avatar" src="//placekitten.com/g/50/50" />
+                            <p class="ChatLog__message">
+                                What is going on here?
+                                <time class="ChatLog__timestamp">5 minutes ago</time>
+                            </p>
+                        </li>
+                        <li class="ChatLog__entry ChatLog__entry_mine">
+                            <img class="ChatLog__avatar" src="//placekitten.com/56/56" />
+                            <p class="ChatLog__message">
+                                I have no idea.
+                                <time class="ChatLog__timestamp">4 minutes ago</time>
+                            </p>
+                        </li>
+                        <li class="ChatLog__entry">
+                            <img class="ChatLog__avatar" src="//placekitten.com/g/50/50" />
+                            <p class="ChatLog__message">
+                                I have a neat idea. Maybe I should explain it to you in detail?
+                                <time class="ChatLog__timestamp">3 minutes ago</time>
+                            </p>
+                        </li>
+                        <li class="ChatLog__entry ChatLog__entry_mine">
+                            <img class="ChatLog__avatar" src="//placekitten.com/50/50" />
+                            <p class="ChatLog__message">
+                                Sure thing. The more detail the better. In fact, if you could provide definitions for every single term you use, that would be terrific!
+                                <time class="ChatLog__timestamp">2 minutes ago</time>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div id="UsersBox">
+
+                </div>
+            </div>
+        </div>
+        <div id="message_bar" class="row">
+            <div class="col-md-12">
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <input class="form-control field" type="text" id="textMessage" placeholder="Type message here" autofocus="autofocus" required="required" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="hidden" id="receiver_id" value="" />
+                        <input class="btn btn-block button" type="submit" id="sendMessageButton" value="Send" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-2.2.0.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.11.4.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+        // Function to execute as page loads
+        $(document).ready(function () {
+            //$('#searchBox').on('keyup', function () {
+            //    var currentValue = $(this).val();
+            //    var ajaxMethodUrl = "/Main/SearchUsers?keyword=" + currentValue;
+            //    $(this).autocomplete({
+            //        source: function (request, response) {
+            //            var customer = new Array();
+            //            $.ajax({
+            //                async: false,
+            //                cache: false,
+            //                type: "Get",
+            //                url: ajaxMethodUrl,
+            //                success: function (data) {
+
+            //                    for (var i = 0; i < data.length ; i++) {
+            //                        customer[i] = { label: data[i], Id: data[i] };
+            //                    }
+            //                }
+            //            });
+            //            response(customer);
+            //        }
+            //    });
+            //});
+            $('#searchBox').on('keyup', function () {
+                $('#UsersBox').load("/Main/SearchUsers?keyword=" + $(this).val());
+            });
+
+            $('#UsersBox').on('click', 'a', function() {
+                $('#chat_window').load("/Main/GetMessages/" + $(this).data('userid'));
+                $('#receiver_id').val($(this).data('userid'));
+            });
+
+            // Reference the auto-generated proxy for the hub.
+            var chat = $.connection.chatHub;
+
+            // Call to the function for registerig client methods
+            registerClientMethods(chat);
+
+            // Start the hub
+            $.connection.hub.start().done(function () {
+                //registerEvents(chatHub);
+                chat.server.connect(@Model.Id, "@Model.First_Name" + " " + "@Model.Last_Name" + " ");
+            });
+
+            function registerClientMethods(chatHub) {
+                // Function for calling by the server on client-end on log in
+                chatHub.client.onConnected = function (id, userName, allUsers, messages) {
+                    $('#userSettings').text(userName);
+
+                    // Add all users
+                    for (var i = 0; i < allUsers.length; i++) {
+                        AddUser(chatHub, allUsers[i].Id, allUsers[i].First_Name);
+                    }
+
+                    // Add all messages
+                    //for (var i = 0; i < messages.length; i++) {
+                    //    AddMessage(messages[i].UserName, messages[i].Message);
+                    //}
+                }
+
+                // Client method for sending private messages
+                chatHub.client.sendPrivateMessage = function (receiverId, senderId, message) {
+                    if (receiverId == senderId)
+                    {
+                        $('.ChatLog').append('<li class="ChatLog__entry ChatLog__entry_mine"><img class="ChatLog__avatar" src="//placekitten.com/50/50" /><p class="ChatLog__message">' + message + '<time class="ChatLog__timestamp">1 minutes ago</time></p></li>');
+                    }
+                    else
+                    {
+                        $('.ChatLog').append('<li class="ChatLog__entry"><img class="ChatLog__avatar" src="//placekitten.com/g/50/50" /><p class="ChatLog__message">' + message + '<time class="ChatLog__timestamp">1 minute ago</time></p></li>');
+                    }
+                }
+            }
+
+            $('#sendMessageButton').on('click', function() {
+                var message = $('#textMessage').val();
+                if (message.length > 0) {
+                    chat.server.sendPrivateMessage($('#receiver_id').val(), message);
+                    $('#textMessage').val('');
+                }
+            });
+
+            $('#textMessage').on('keypress', function(event) {
+                if (event.which == 13)
+                {
+                    var message = $('#textMessage').val();
+                    if (message.length > 0) {
+                        chat.server.sendPrivateMessage($('#receiver_id').val(), message);
+                        $('#textMessage').val('');
+                    }
+                }
+            });
+
+            // Function for adding user to the users box
+            @*function AddUser(chatHub, id, name) {
+                var code = "";
+                if (@Model.Id != id) {
+                    code = $('<a href="#" class="list-group-item active" id="' + id + '">' + name + '</a>');
+                    //$(code).click(function () {
+                    //    OpenPrivateChatWindow(chatHub, id, name);
+                    //});
+                    $("#UsersBox").append(code);
+                }
+            }*@
+        });
+    </script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+</body>
+</html>

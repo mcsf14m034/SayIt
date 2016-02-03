@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery.fancybox.css" rel="stylesheet" />
+    <link href="~/Content/jquery.fancybox-buttons.css" rel="stylesheet" />
+    <link href="~/Content/jquery.fancybox-thumbs.css" rel="stylesheet" />
+    <link href="~/Content/Main.css" rel="stylesheet" />
+    <link rel="icon" href="~/Content/logo.png" type="image/png" />
+    <script>
+        function loadImage(event) {
+            var output = document.getElementById('picPlace');
+            var temp = URL.createObjectURL(event.target.files[0]);
+            if (temp != null)
+            {
+                output.src = URL.createObjectURL(event.target.files[0]);
+            }
+        };
+    </script>
+    <title>Say It</title>
+    <style>
+    </style>
+</head>
+<body>
+    <div id="vr1">&nbsp;</div>
+    <div id="vr2">&nbsp;</div>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/Main/Index">
+                    <img class="img-responsive img-size" alt="SayIt" src="~/Content/navbar-logo.png" />
+                </a>
+            </div>
+            <div class="navbar-form navbar-left" id="searchForm">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search for people" id="searchBox">
+                </div>
+                <input type="submit" name="SearchUsers" class="btn btn-default" value="Search" id="searchUsers" />
+                <input type="button" id="publicChat" name="publicChat" class="btn btn-default" value="Public Chat Room" />
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><input style="margin-top: 6.5%" id="manageFriends" type="button" name="manageFriends" class="btn btn-default" value="Manage Friends" /></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: white;"><span id="userSettings">Account</span> <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/Accounts/ManageProfile">Settings</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="/Accounts/Signout">Sign out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <script src="~/Scripts/jquery-2.2.0.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.11.4.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.fancybox.pack.js"></script>
+    <script src="~/Scripts/jquery.fancybox-buttons.js"></script>
+    <script src="~/Scripts/jquery.fancybox-media.js"></script>
+    <script src="~/Scripts/jquery.fancybox-thumbs.js"></script>
+    @RenderBody()
+</body>
+</html>
